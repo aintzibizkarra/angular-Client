@@ -4,15 +4,29 @@ import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 
+//Componentes
+import { CancionesComponent } from './canciones/canciones.component';
+
+//Providers
+import { CancionesService } from './providers/canciones.service';
+import { HttpClientModule } from '@angular/common/http';
+
+//Pipes
+
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    CancionesComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    HttpClientModule
   ],
-  providers: [],
+  providers: [
+    HttpClientModule,
+    CancionesService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
