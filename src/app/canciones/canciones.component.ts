@@ -46,6 +46,7 @@ export class CancionesComponent implements OnInit {
   }
   eliminar(id:number){
     console.log(" CancionesComponent eliminar %i", id);
+    
 
   }
   /*mockData(){

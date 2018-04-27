@@ -18,6 +18,7 @@ import { HttpClientModule } from '@angular/common/http';
   declarations: [
     AppComponent,
     CancionesComponent
+    
   ],
   imports: [
     BrowserModule,
