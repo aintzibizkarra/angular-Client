@@ -8,56 +8,113 @@ import { Cancion } from '../model/cancion';
   styleUrls: ['./canciones.component.scss']
 })
 export class CancionesComponent implements OnInit {
- //Caniones
- canciones: Cancion[];
- cancionSeleccionada: Cancion;
- constructor(private cancionesService: CancionesService) {
+  //Caniones
+  canciones: Cancion[];
+  cancionSeleccionada: Cancion;
+  nombreCancion:String;
+  isValid:boolean;
 
-   console.log("CancionesComponent constructor");
+  constructor(private cancionesService: CancionesService) {
 
-   //inicializar los atributos
-  this.canciones=[];
-  //Para que este inicializada y vacia
-  this.cancionSeleccionada= new Cancion(-1, "");
+    console.log("CancionesComponent constructor");
+
+    //inicializar los atributos
+    this.isValid= false;
+    this.nombreCancion = '';
+    this.canciones = [];
+    this.cancionSeleccionada = new Cancion(-1,"");
+   
 
     //this.mockData();
-  
-
-  
   }
 
   ngOnInit() {
     console.log("CancionesComponent ngOnInit");
-
     //Llamadas a los servicios o providers
+    this.recargar();
+  }
+
+  //Recarga las canciones mediante GET
+  recargar(){
+    console.log('CancionesComponent recargar');
+    this.canciones = [];
     this.cancionesService.getCanciones().subscribe(
-      result => {
-           
-         result.forEach(element => {
-           this.canciones.push(element);
-           
-         });
-
+    result=>{
+      console.log('    response correcto %o', result);   
+        if ( result != null ){     
+          result.forEach( element => {
+              this.canciones.push( element );
+          });    
+        }      
       },
-      error => {
-          console.warn(error);
+      error=>{
+        console.warn(error);
       }
-  );
+      );
   }
-  eliminar(id:number){
-    console.log(" CancionesComponent eliminar %i", id);
-    
 
+  eliminar(id:number){
+    console.log(`CancionesComponent eliminar ${id}`);
+    if ( confirm("¿ Quieres eliminar la canción ?") ){
+    this.cancionesService.delete(id).subscribe(
+      result=>{
+
+          this.recargar();
+          console.log(`Cancion Eliminada!!!`);
+      },error=>{
+        console.warn(`Error al eliminar ${error}` );
+      }
+    );
+    }
   }
+
+  crearCancion(){
+    console.log(`CancionesComponent crearCancion ${this.nombreCancion}`);
+    this.nombreCancion = this.nombreCancion.trim();
+
+    if ( this.nombreCancion.length > 0 ){
+      this.isValid = false;      
+      console.debug(`crear cancion ${this.nombreCancion}`);
+      this.cancionesService.addCanciones( this.nombreCancion ).subscribe(
+        result=>{
+          this.nombreCancion = '';
+          this.recargar();
+        },error=>{
+          console.warn('Error al crear %o', error );
+        }
+      );
+
+    }else{
+      this.isValid = true;
+      console.warn(`nombre cancion vacio o no correcta`);
+    }
+  }
+
+  modificar(index:number){
+    let cancion = this.canciones[index];
+    console.log(`CancionesComponent modificar onfousout cancion: %o`, cancion);
+    if ( cancion.nombre.trim().length > 0 ){
+      this.cancionesService.updateCanciones(cancion).subscribe(
+        result=>{        
+          this.recargar();
+        },error=>{
+          console.warn('Error al modificar %o', error );
+        }
+      );
+    }else{
+      console.warn('Nombre cancion NO valido');
+    }
+  }
+
   /*mockData(){
-    this.canciones.push (new Cancion (1,"Macarena"));
-    this.canciones.push (new Cancion (2,"Aitormena"));
-    this.canciones.push (new Cancion (3,"Sorgiña pirulina"));
-    this.canciones.push (new Cancion (4,"Laztana"));
-    this.canciones.push (new Cancion (5,"Bailamos"));
-    this.canciones.push (new Cancion (6,"Pakito Txokolaterue"));
-    this.canciones.push (new Cancion (7,"Ikusi mendizaleak"));
-    this.canciones.push (new Cancion (8,"Bye Bye"));
+  this.canciones.push (new Cancion (1,"Macarena"));
+  this.canciones.push (new Cancion (2,"Aitormena"));
+  this.canciones.push (new Cancion (3,"Sorgiña pirulina"));
+  this.canciones.push (new Cancion (4,"Laztana"));
+  this.canciones.push (new Cancion (5,"Bailamos"));
+  this.canciones.push (new Cancion (6,"Pakito Txokolaterue"));
+  this.canciones.push (new Cancion (7,"Ikusi mendizaleak"));
+  this.canciones.push (new Cancion (8,"Bye Bye"));
   }*/
 
 }

@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 
 
 import { AppComponent } from './app.component';
+import { FormsModule } from '@angular/forms';
 
 //Componentes
 import { CancionesComponent } from './canciones/canciones.component';
@@ -17,15 +18,18 @@ import { HttpClientModule } from '@angular/common/http';
 @NgModule({
   declarations: [
     AppComponent,
+    
     CancionesComponent
     
   ],
   imports: [
     BrowserModule,
+    FormsModule,
     HttpClientModule
   ],
   providers: [
     HttpClientModule,
+    
     CancionesService
   ],
   bootstrap: [AppComponent]
